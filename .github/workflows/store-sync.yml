@@ -24,7 +24,9 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
-      - run: sdkmanager 'build-tools;36.0.0'
+        with:
+          packages: 'build-tools;36.0.0'
+          log-accepted-android-sdk-licenses: false
       - run: python scripts/sync_catalog.py
         env:
           GITHUB_TOKEN: ${{ github.token }}
