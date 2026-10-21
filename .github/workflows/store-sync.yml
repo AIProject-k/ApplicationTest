@@ -1,0 +1,32 @@
+name: Synchronize MinAppStore for free
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * *'
+  release:
+    types: [published]
+permissions:
+  contents: read
+concurrency:
+  group: minappstore-catalog-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'build-tools;36.0.0'
+      - run: python scripts/sync_catalog.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          STORE_ORIGIN: ${{ vars.STORE_ORIGIN }}
+          MINAPPSTORE_ADMIN_TOKEN: ${{ secrets.MINAPPSTORE_ADMIN_TOKEN }}
