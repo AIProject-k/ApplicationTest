@@ -3,7 +3,7 @@
 Indi Store의 저장소 연동, APK 다운로드, 검증 및 설치를 확인하는 작은 Android 테스트 앱입니다.
 
 - 패키지: `dev.indi.applicationtest`
-- 버전: `1.0.0` (`versionCode=1`)
+- 버전: `1.0.1` (`versionCode=2`)
 - Android 8.0(API 26) 이상, compile/target SDK 36
 - 네트워크·사진·계정 권한 없음
 - 화면에서 버전·패키지를 확인하고 **실행 확인** 버튼을 누를 수 있습니다.
@@ -27,8 +27,8 @@ APK는 `app/build/outputs/apk/release/app-release.apk`에 생성됩니다.
 
 ```sh
 mkdir -p release
-cp app/build/outputs/apk/release/app-release.apk release/ApplicationTest-1.0.0.apk
-python scripts/store_manifest.py --apk release/ApplicationTest-1.0.0.apk --metadata store-metadata.json --output release/store-manifest.json
+cp app/build/outputs/apk/release/app-release.apk release/ApplicationTest-1.0.1.apk
+python scripts/store_manifest.py --apk release/ApplicationTest-1.0.1.apk --metadata store-metadata.json --output release/store-manifest.json
 ```
 
 manifest 생성 시 `ANDROID_HOME`이 실제 Android SDK 경로를 가리켜야 합니다.
