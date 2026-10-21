@@ -1,0 +1,10 @@
+{
+  "name": "Indi Store 테스트",
+  "summary": "앱스토어 연동·다운로드·설치를 확인하는 테스트 앱",
+  "description": "AIProject-k/ApplicationTest의 공개 릴리스로 배포하는 Indi Store 연동 테스트 앱입니다. 버전과 패키지 정보를 표시하고 실행 확인 버튼을 제공합니다. 네트워크·사진·계정 권한을 요청하지 않습니다.",
+  "category": "개발 도구",
+  "author": "AIProject-k",
+  "tags": ["테스트", "앱스토어"],
+  "iconUrl": "",
+  "screenshots": []
+}

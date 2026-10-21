@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Indi Store 테스트</string>
+    <string name="title">설치 테스트 앱</string>
+    <string name="description">Indi Store에서 다운로드와 설치를 확인하기 위한 작은 테스트 앱입니다.\n사진·계정·네트워크 권한을 사용하지 않습니다.</string>
+    <string name="version">버전 %1$s · versionCode %2$d</string>
+    <string name="package_name">패키지: %1$s</string>
+    <string name="repository">AIProject-k/ApplicationTest</string>
+    <string name="check">실행 확인</string>
+    <string name="confirmed">앱이 정상적으로 실행되었습니다.</string>
+</resources>
