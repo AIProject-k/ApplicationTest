@@ -96,6 +96,22 @@ def store_origin(value):
         raise ValueError('STORE_ORIGIN must be a bare HTTPS origin')
     return value
 
+def collect_inventory(github):
+    repositories=[]
+    seen=set()
+    for owner in OWNERS:
+        for page in range(1,12):
+            batch=github.json(f'/users/{owner}/repos?type=owner&sort=full_name&per_page=100&page={page}',allow_next=True)
+            if not isinstance(batch,list) or (page==11 and batch): raise ValueError('Repository inventory exceeds 1,000 per account')
+            for repo in batch:
+                name=repo['full_name']
+                if repo.get('private') or repo['owner']['login'].lower()!=owner.lower() or name.lower() in seen: continue
+                seen.add(name.lower())
+                repositories.append({'full_name':name,'name':repo['name'],'owner':{'login':repo['owner']['login']},'description':(repo.get('description') or '')[:1000],
+                    'html_url':'https://github.com/'+name,'private':False,'archived':bool(repo.get('archived')),'default_branch':repo.get('default_branch') or ''})
+            if len(batch)<100: break
+    return repositories
+
 def build_catalog(snapshot, github, origin):
     origin=store_origin(origin)
     registry=snapshot['registry']
@@ -173,8 +189,10 @@ def main():
     origin=store_origin(os.environ['STORE_ORIGIN'])
     token=os.environ['MINAPPSTORE_ADMIN_TOKEN']
     snapshot=api(origin,token)
-    catalog=build_catalog(snapshot,GitHub(os.environ['GITHUB_TOKEN']),origin)
-    result=api(origin,token,'PUT',{'catalog':catalog,'expectedCatalogEtag':snapshot['catalogEtag'],'expectedRegistryEtag':snapshot['registryEtag']})
+    github=GitHub(os.environ['GITHUB_TOKEN'])
+    inventory=collect_inventory(github)
+    catalog=build_catalog(snapshot,github,origin)
+    result=api(origin,token,'PUT',{'catalog':catalog,'repositoryInventory':inventory,'expectedCatalogEtag':snapshot['catalogEtag'],'expectedRegistryEtag':snapshot['registryEtag']})
     if result.get('published') is not True: raise RuntimeError('Store did not confirm publication')
     print(f"Published {len(catalog['apps'])} verified apps; APK storage: public GitHub Releases")
 
