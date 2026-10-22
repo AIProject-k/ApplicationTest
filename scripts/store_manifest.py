@@ -85,8 +85,8 @@ def inspect_apk(path):
     package = re.search(r"^package: name='([^']+)' versionCode='(\d+)' versionName='([^']*)'",badging,re.M)
     sdk = re.search(r"^sdkVersion:'(\d+)'",badging,re.M)
     certs = subprocess.check_output([sdk_tool('apksigner'),'verify','--verbose','--print-certs',str(path)],text=True,encoding='utf-8',errors='replace',timeout=120)
-    signers = re.findall(r'^Signer #\d+ certificate SHA-256 digest: ([0-9a-fA-F]+)$',certs,re.M)
-    if not package or not sdk or len(signers) != 1:
+    signers = sorted(set(re.findall(r'^(?:Signer #\d+|V\d+(?:\.\d+)? Signer:) certificate SHA-256 digest: ([0-9a-fA-F]+)$',certs,re.M)))
+    if not package or not sdk or len(signers) != 1 or not re.search(r'^Number of signers: 1$',certs,re.M):
         raise ValueError('APK must be signed by exactly one signer with readable package metadata')
     with open(path,'rb') as apk:
         digest = hashlib.file_digest(apk,'sha256').hexdigest()
